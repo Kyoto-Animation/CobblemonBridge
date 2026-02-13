@@ -1,0 +1,7 @@
+name: CobblemonBridge
+version: ${version}
+main: com.kyotoanimation.cobblemod.CobblemonBridge
+api-version: '1.21'
+author: KyotoAnimation
+description: A Bukkit plugin that bridges Cobblemon events for extended functionality
+softdepend: [Cobblemon]

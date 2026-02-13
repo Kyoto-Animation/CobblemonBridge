@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.0'
+}
+
+group = 'com.kyotoanimation'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+    maven {
+        name = 'Cobblemon Maven'
+        url = 'https://maven.impactdev.net/repository/development/'
+    }
+}
+
+dependencies {
+    // Paper API (包含Bukkit/Spigot API)
+    compileOnly 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
+    
+    // Kotlin标准库
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.1.0'
+    
+    // Cobblemon API
+    compileOnly 'com.cobblemon:fabric:1.7.1+1.21.1'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '21'
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// 复制构建的jar文件到dist目录
+task copyToDist(type: Copy) {
+    from jar
+    into 'dist'
+    rename { "CobblemonBridge-${version}.jar" }
+}
+
+// 构建完成后自动复制到dist目录
+build.finalizedBy(copyToDist)

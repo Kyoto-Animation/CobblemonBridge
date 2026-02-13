@@ -1,0 +1,6 @@
+# CobblemonBridge 插件配置文件
+
+# Debug 模式设置
+# 开启后，会在控制台显示精灵捕获事件的详细记录
+# 默认值: false
+debug-mode: false
